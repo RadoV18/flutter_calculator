@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black
+        scaffoldBackgroundColor: Colors.black,
+        fontFamily: 'SFPro'
       ),
       home: const Scaffold(
         body: Calculator()

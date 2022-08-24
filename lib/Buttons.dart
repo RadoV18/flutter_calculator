@@ -13,28 +13,33 @@ class Buttons extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
-            Button(value: "AC", color: button_colors.lightGrey, width: 3),
-            Button(value: "/", isOperator: true, color: button_colors.orange)
+            Button(value: "AC", color: button_colors.lightGrey),
+            Button(value: "(", color: button_colors.lightGrey),
+            Button(value: ")", color: button_colors.lightGrey),
+            Button(value: "÷", isOperator: true, color: button_colors.orange)
           ],
         ),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
             Button(value: "7"),
             Button(value: "8"),
             Button(value: "9"),
-            Button(value: "X", isOperator: true, color: button_colors.orange)
+            Button(value: "×", isOperator: true, color: button_colors.orange)
           ],
         ),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
             Button(value: "4"),
             Button(value: "5"),
             Button(value: "6"),
-            Button(value: "-", isOperator: true, color: button_colors.orange)
+            Button(value: "−", isOperator: true, color: button_colors.orange)
           ],
         ),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
@@ -44,11 +49,13 @@ class Buttons extends StatelessWidget {
             Button(value: "+", isOperator: true, color: button_colors.orange)
           ],
         ),
+        const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: const [
-            Button(value: "0", width: 2),
+            Button(value: "0"),
             Button(value: "."),
+            Button(icon: IconData(0xeeb5, fontFamily: 'MaterialIcons', matchTextDirection: true)),
             Button(value: "=", isOperator: true, color: button_colors.orange)
           ],
         ),

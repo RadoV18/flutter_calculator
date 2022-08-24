@@ -23,7 +23,8 @@ class _ScreenState extends State<Screen> {
               textAlign: TextAlign.right,
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 70
+                  fontSize: 90,
+                  fontWeight: FontWeight.w500
               )
           ),
         )
