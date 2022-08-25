@@ -13,8 +13,12 @@ class CalculatorProvider with ChangeNotifier {
     isDotPressed = false;
   }
 
+  bool isParentheses(String character) {
+    return ["(", ")"].contains(character);
+  }
+
   bool isOperator(String character) {
-    return ["÷", "×", "−", "+"].contains(character);
+    return ["÷", "×", "-", "+"].contains(character);
   }
 
   num calc(num a, num b, String operator) {
@@ -26,7 +30,7 @@ class CalculatorProvider with ChangeNotifier {
         return a / b;
       case "×":
         return a * b;
-      case "−":
+      case "-":
         return a - b;
       case "+":
         return a + b;
@@ -44,15 +48,17 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   bool isValid() {
+    // stack of parentheses
     List<String> stack = [];
     for(int i = 0; i < _sequence.length; i++) {
       String chr = _sequence[i];
       if(chr.compareTo("(") == 0) {
         stack.add("(");
       } else if(chr.compareTo(")") == 0) {
-        if(stack.isEmpty) {
+        if(stack.isEmpty) { // can't pair )
           return false;
         } else if(stack.last.compareTo("(") == 0) {
+          // pair of parentheses
           stack.removeLast();
         }
         // empty if previous is (
@@ -69,35 +75,69 @@ class CalculatorProvider with ChangeNotifier {
     for(int i = 0; i < _input.length; i++) {
       String chr = _input[i];
       if(isOperator(chr) || chr.compareTo(")") == 0) {
-        if(!(i > 0 && _input[i - 1].compareTo(")") == 0)) {
-          if(currentNumber.isNotEmpty) {
-            _sequence.add(currentNumber);
-            currentNumber = "";
-          }
+        // previous character is not )
+        if(!(i > 0 && _input[i - 1].compareTo(")") == 0)
+          && currentNumber.isNotEmpty
+        ) {
+          _sequence.add(currentNumber);
+          currentNumber = "";
         }
         _sequence.add(chr);
         continue;
       } else if(chr.compareTo("(") == 0) {
         if(i > 0) {
+          // ...)(... -> ...)*(...
           if(_input[i - 1].compareTo(")") == 0) {
+            _sequence.add("×");
+          } else if(currentNumber.isNotEmpty) {
+            // ...5(... -> ...5*(...
+            _sequence.add(currentNumber);
             _sequence.add("×");
           }
         }
         _sequence.add(chr);
         currentNumber = "";
         continue;
+      } else if(i > 0 && _input[i - 1].compareTo(")") == 0
+        && isNumber(chr) // previous is ) and current is a number
+      ) {
+        // ...)5... -> ...)*5...
+        _sequence.add("×");
       }
       currentNumber += chr;
     }
+    // final number
     if(currentNumber.isNotEmpty) {
       _sequence.add(currentNumber);
     }
   }
 
+  void fixNegativeValues() {
+    // first number
+    if(_sequence[0].compareTo("-") == 0 && isNumber(_sequence[1])) {
+      _sequence.removeAt(0);
+      _sequence[0] = "-${_sequence[0]}";
+    }
+    for(int i = 1; i < _sequence.length - 1; i++) {
+      String token = _sequence[i];
+      if(token.compareTo("-") == 0 && isNumber(_sequence[i + 1])) {
+        if(isOperator(_sequence[i - 1])) {
+          _sequence.removeAt(i);
+          _sequence[i] = "-${_sequence[i]}";
+        } else {
+          _sequence[i] = "+";
+          _sequence[i + 1] = "-${_sequence[i + 1]}";
+        }
+      }
+    }
+  }
+
   int precedence(String op){
+    // lower precedence
     if(op.compareTo("+") == 0 || op.compareTo("-") == 0) {
       return 1;
     }
+    // higher precedence
     if(op.compareTo("×") == 0 || op.compareTo("÷") == 0) {
       return 2;
     }
@@ -105,7 +145,9 @@ class CalculatorProvider with ChangeNotifier {
   }
   // shunting yard algorithm
   void eval() {
+    // stack of values
     List<num> values = [];
+    // stak of operations
     List<String> operations = [];
 
     void solve() {
@@ -131,7 +173,7 @@ class CalculatorProvider with ChangeNotifier {
         if(operations.isNotEmpty) {
           operations.removeLast();
         }
-      } else {
+      } else { // is operator
         while(operations.isNotEmpty && (precedence(operations.last)
           >= precedence(token))) {
           solve();
@@ -148,6 +190,7 @@ class CalculatorProvider with ChangeNotifier {
 
   void process() {
     generateSequence();
+    fixNegativeValues();
     if(!isValid()) {
       throw Error();
     }
@@ -172,10 +215,16 @@ class CalculatorProvider with ChangeNotifier {
   }
 
   void addCharacter(String evt) {
+    if(_input.compareTo("Error") == 0) {
+      clear();
+    }
     // first number
     if(_input.compareTo("0") == 0) {
+      // can start with -
       if(isOperator(evt)) {
-        return;
+        if(evt.compareTo("-") != 0) {
+          return;
+        }
       }
       if(evt.compareTo(".") != 0) {
         _input = "";
@@ -216,11 +265,10 @@ class CalculatorProvider with ChangeNotifier {
         default:
           addCharacter(evt);
       }
-    } catch(err) {
+    } catch(err, st) {
       _input = "Error";
     } finally {
       notifyListeners();
-      print(_input);
     }
   }
 }

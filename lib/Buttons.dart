@@ -36,7 +36,7 @@ class Buttons extends StatelessWidget {
             Button(value: "4"),
             Button(value: "5"),
             Button(value: "6"),
-            Button(value: "−", isOperator: true, color: button_colors.orange)
+            Button(value: "-", isOperator: true, color: button_colors.orange)
           ],
         ),
         const SizedBox(height: 12),
