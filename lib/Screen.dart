@@ -15,7 +15,7 @@ class _ScreenState extends State<Screen> {
     double screenWidth = MediaQuery.of(context).size.width;
     var calculatorProvider = Provider.of<CalculatorProvider>(context);
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: SizedBox(
           height: 100.0,
           width: screenWidth,
