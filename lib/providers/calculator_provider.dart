@@ -120,13 +120,24 @@ class CalculatorProvider with ChangeNotifier {
     }
     for(int i = 1; i < _sequence.length - 1; i++) {
       String token = _sequence[i];
-      if(token.compareTo("-") == 0 && isNumber(_sequence[i + 1])) {
-        if(isOperator(_sequence[i - 1])) {
-          _sequence.removeAt(i);
-          _sequence[i] = "-${_sequence[i]}";
-        } else {
-          _sequence[i] = "+";
-          _sequence[i + 1] = "-${_sequence[i + 1]}";
+      if(token.compareTo("-") == 0) {
+        if(isNumber(_sequence[i + 1])) {
+          if(isOperator(_sequence[i - 1]) ||
+              _sequence[i - 1].compareTo("(") == 0) {
+            _sequence.removeAt(i);
+            _sequence[i] = "-${_sequence[i]}";
+          } else {
+            _sequence[i] = "+";
+            _sequence[i + 1] = "-${_sequence[i + 1]}";
+          }
+        } else if(_sequence[i + 1].compareTo("-") == 0) {
+          _sequence.removeAt(i + 1);
+          if(!isOperator(_sequence[i - 1])) {
+            _sequence[i] = "+";
+          } else {
+            _sequence.removeAt(i);
+            i--;
+          }
         }
       }
     }
@@ -145,6 +156,7 @@ class CalculatorProvider with ChangeNotifier {
   }
   // shunting yard algorithm
   void eval() {
+    print(_sequence);
     // stack of values
     List<num> values = [];
     // stak of operations
@@ -245,6 +257,11 @@ class CalculatorProvider with ChangeNotifier {
     }
     // allow . after operator
     if(isOperator(evt)) {
+      // do not allow repeated operators, only -
+      if(_input.isNotEmpty && isOperator(_input[_input.length - 1])
+          && evt.compareTo("-") != 0) {
+        return;
+      }
       isDotPressed = false;
     }
     _input += evt;
@@ -266,6 +283,8 @@ class CalculatorProvider with ChangeNotifier {
           addCharacter(evt);
       }
     } catch(err, st) {
+      print(err);
+      print(st);
       _input = "Error";
     } finally {
       notifyListeners();
