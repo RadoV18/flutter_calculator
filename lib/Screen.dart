@@ -15,22 +15,26 @@ class _ScreenState extends State<Screen> {
     double screenWidth = MediaQuery.of(context).size.width;
     var calculatorProvider = Provider.of<CalculatorProvider>(context);
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       child: SizedBox(
-        height: 100.0,
-        width: screenWidth,
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: Text(
-              context.watch<CalculatorProvider>().input,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 90,
-                  fontWeight: FontWeight.w500
-              )
-          ),
-        )
+          height: 100.0,
+          width: screenWidth,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              reverse: true,
+              child: Text(
+                  context.watch<CalculatorProvider>().input,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 90,
+                      fontWeight: FontWeight.w500
+                  )
+              ),
+            ),
+          )
       ),
     );
   }
