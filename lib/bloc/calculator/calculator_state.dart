@@ -11,4 +11,7 @@ class CalculatorValue extends CalculatorState {
   final String input;
 
   const CalculatorValue({this.input = "0"});
+
+  @override
+  List<Object> get props => [input];
 }

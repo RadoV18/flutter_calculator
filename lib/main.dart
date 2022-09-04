@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/calculator/calculator_bloc.dart';
 import 'widgets/Calculator.dart';
-import 'package:bloc/bloc.dart';
 
 void main() {
   runApp(const MyApp());
