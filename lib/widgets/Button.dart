@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../bloc/calculator/calculator_bloc.dart';
 import './ButtonColors.dart' as button_colors;
-import './providers/calculator_provider.dart';
 
 class Button extends StatelessWidget {
   final String value;
@@ -32,7 +32,7 @@ class Button extends StatelessWidget {
       height: screenWidth * 0.2,
       child: ElevatedButton(
         onPressed: () {
-          context.read<CalculatorProvider>().setInput(value);
+          context.read<CalculatorBloc>().add(ButtonPress(button: value));
         },
         style: ElevatedButton.styleFrom(
           primary: color,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Screen.dart';
-import 'Buttons.dart';
+import './Buttons.dart';
 
 class Calculator extends StatelessWidget {
   const Calculator({Key? key}) : super(key: key);
